@@ -518,6 +518,13 @@ function DetailPanel({ law, onClose }) {
 }
 
 export default function App() {
+  const [theme, setTheme] = useState(() => {
+    try {
+      const savedTheme = localStorage.getItem("l48theme");
+      if (savedTheme === "dark" || savedTheme === "light") return savedTheme;
+    } catch {}
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
   const [checks, setChecks] = useState(() => {
     try {
       const saved = JSON.parse(localStorage.getItem("l48v3") || "null");
@@ -529,6 +536,11 @@ export default function App() {
   });
   const [filter, setFilter] = useState("all");
   const [selected, setSelected] = useState(null);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem("l48theme", theme); } catch {}
+  }, [theme]);
 
   useEffect(() => { try { localStorage.setItem("l48v3", JSON.stringify(checks)); } catch {} }, [checks]);
 
@@ -544,15 +556,27 @@ export default function App() {
 
   const fb = (on) => ({ fontSize: 12, padding: "4px 12px", borderRadius: 20, border: "0.5px solid var(--color-border-secondary)", background: on ? "var(--color-background-secondary)" : "var(--color-background-primary)", color: on ? "var(--color-text-primary)" : "var(--color-text-secondary)", fontWeight: on ? 500 : 400, cursor: "pointer" });
   const tag = (g) => ({ display: "inline-block", fontSize: 10, padding: "2px 7px", borderRadius: 10, fontWeight: 500, background: TAGS[g].bg, color: TAGS[g].c });
+  const themeLabel = theme === "dark" ? "Night" : "Day";
+  const toggleTheme = () => setTheme((current) => current === "dark" ? "light" : "dark");
 
   let wi = 0;
   return (
     <div style={{ padding: "1rem 0", fontFamily: "var(--font-sans)" }}>
       {/* filters */}
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: "1rem" }}>
-        {[["all","전체"],["w","직장/비즈니스"],["r","인간관계"],["m","자기계발"],["done","완료만"]].map(([k,l]) => (
-          <button key={k} style={fb(filter===k)} onClick={() => setFilter(k)}>{l}</button>
-        ))}
+      <div style={{ display: "flex", gap: 10, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", marginBottom: "1rem" }}>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {[["all","전체"],["w","직장/비즈니스"],["r","인간관계"],["m","자기계발"],["done","완료만"]].map(([k,l]) => (
+            <button key={k} style={fb(filter===k)} onClick={() => setFilter(k)}>{l}</button>
+          ))}
+        </div>
+        <button
+          type="button"
+          aria-label={`Switch to ${theme === "dark" ? "day" : "night"} mode`}
+          onClick={toggleTheme}
+          style={{ fontSize: 12, padding: "4px 12px", borderRadius: 20, border: "0.5px solid var(--color-border-secondary)", background: "var(--color-background-primary)", color: "var(--color-text-primary)", fontWeight: 500, cursor: "pointer" }}
+        >
+          {themeLabel}
+        </button>
       </div>
 
       {/* progress */}

@@ -486,7 +486,7 @@ function DetailPanel({ law, onClose }) {
         {/* example */}
         <div style={{ marginBottom: 18 }}>
           <div style={{ fontSize: 11, fontWeight: 500, color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 8 }}>실제 예시</div>
-          <div style={{ fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.75, borderLeft: "3px solid #1D9E75", paddingLeft: 14, borderRadius: 0 }}>{law.example}</div>
+          <div style={{ fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.75, borderLeft: "3px solid var(--color-accent)", paddingLeft: 14, borderRadius: 0 }}>{law.example}</div>
         </div>
 
         {/* do / dont */}
@@ -496,7 +496,7 @@ function DetailPanel({ law, onClose }) {
             <ul style={{ paddingLeft: 0, listStyle: "none", margin: 0 }}>
               {law.do.map((d,i) => (
                 <li key={i} style={{ fontSize: 13, lineHeight: 1.65, color: "var(--color-text-primary)", paddingLeft: 20, position: "relative", marginBottom: 6 }}>
-                  <span style={{ position: "absolute", left: 0, color: "#1D9E75", fontWeight: 700 }}>✓</span>{d}
+                  <span style={{ position: "absolute", left: 0, color: "var(--color-accent)", fontWeight: 700 }}>✓</span>{d}
                 </li>
               ))}
             </ul>
@@ -506,7 +506,7 @@ function DetailPanel({ law, onClose }) {
             <ul style={{ paddingLeft: 0, listStyle: "none", margin: 0 }}>
               {law.dont.map((d,i) => (
                 <li key={i} style={{ fontSize: 13, lineHeight: 1.65, color: "var(--color-text-primary)", paddingLeft: 20, position: "relative", marginBottom: 6 }}>
-                  <span style={{ position: "absolute", left: 0, color: "#E24B4A", fontWeight: 700 }}>✕</span>{d}
+                  <span style={{ position: "absolute", left: 0, color: "var(--color-danger)", fontWeight: 700 }}>✕</span>{d}
                 </li>
               ))}
             </ul>
@@ -582,7 +582,7 @@ export default function App() {
       {/* progress */}
       <div style={{ fontSize: 12, color: "var(--color-text-secondary)", marginBottom: 6 }}>완료: {doneCount} / {total}주</div>
       <div style={{ background: "var(--color-background-secondary)", borderRadius: 4, height: 4, marginBottom: "1.5rem" }}>
-        <div style={{ height: 4, borderRadius: 4, background: "#1D9E75", width: `${(doneCount/total*100).toFixed(0)}%`, transition: "width .3s" }} />
+        <div style={{ height: 4, borderRadius: 4, background: "var(--color-accent)", width: `${(doneCount/total*100).toFixed(0)}%`, transition: "width .3s" }} />
       </div>
 
       {/* detail panel — inline, above grid */}
@@ -610,7 +610,7 @@ export default function App() {
                         aria-label={`Week ${idx + 1} check ${label}`}
                         aria-pressed={isChecked}
                         onClick={() => toggleCheck(idx, step)}
-                        style={{ width: 22, height: 22, borderRadius: "50%", border: isChecked ? "none" : "0.5px solid var(--color-border-secondary)", background: isChecked ? "#1D9E75" : "var(--color-background-secondary)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: 10, color: isChecked ? "#fff" : "var(--color-text-tertiary)", flexShrink: 0, padding: 0 }}
+                        style={{ width: 22, height: 22, borderRadius: "50%", border: isChecked ? "none" : "0.5px solid var(--color-border-secondary)", background: isChecked ? "var(--color-accent)" : "var(--color-background-secondary)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: 10, color: isChecked ? "var(--color-accent-contrast)" : "var(--color-text-tertiary)", flexShrink: 0, padding: 0 }}
                       >
                         {isChecked ? "✓" : label}
                       </button>

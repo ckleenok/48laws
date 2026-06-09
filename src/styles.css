@@ -9,6 +9,9 @@
   --color-text-tertiary: #8a9691;
   --color-border-secondary: #cad4cf;
   --color-border-tertiary: #e1e7e4;
+  --color-accent: #1d9e75;
+  --color-accent-contrast: #ffffff;
+  --color-danger: #e24b4a;
   --tag-work-bg: #e6f1fb;
   --tag-work-text: #0c447c;
   --tag-relationship-bg: #eeedfe;
@@ -51,7 +54,7 @@ button {
 }
 
 button:hover {
-  border-color: #1d9e75;
+  border-color: var(--color-accent);
 }
 
 #root {
@@ -67,22 +70,25 @@ button:hover {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-page-background: #101412;
-    --color-background-primary: #171d1a;
-    --color-background-secondary: #202823;
-    --color-text-primary: #edf4f0;
-    --color-text-secondary: #aab8b1;
-    --color-text-tertiary: #7f8d86;
-    --color-border-secondary: #3c4942;
-    --color-border-tertiary: #2a332f;
-    --tag-work-bg: #18314a;
-    --tag-work-text: #9fd0ff;
-    --tag-relationship-bg: #29284f;
-    --tag-relationship-text: #c9c5ff;
-    --tag-growth-bg: #263a1e;
-    --tag-growth-text: #b9e98f;
-    --tag-danger-bg: #462322;
-    --tag-danger-text: #ffb5b2;
+    --color-page-background: #070d18;
+    --color-background-primary: #0f1726;
+    --color-background-secondary: #111d30;
+    --color-text-primary: #f8fafc;
+    --color-text-secondary: #9fb2ce;
+    --color-text-tertiary: #6f85a3;
+    --color-border-secondary: #243a59;
+    --color-border-tertiary: #1f3350;
+    --color-accent: #00d8c9;
+    --color-accent-contrast: #05201f;
+    --color-danger: #ff6b7a;
+    --tag-work-bg: #123554;
+    --tag-work-text: #55d9ff;
+    --tag-relationship-bg: #402654;
+    --tag-relationship-text: #f472d0;
+    --tag-growth-bg: #063f37;
+    --tag-growth-text: #00d8c9;
+    --tag-danger-bg: #4a1f2a;
+    --tag-danger-text: #ff9aaa;
   }
 }
 
@@ -96,6 +102,9 @@ button:hover {
   --color-text-tertiary: #8a9691;
   --color-border-secondary: #cad4cf;
   --color-border-tertiary: #e1e7e4;
+  --color-accent: #1d9e75;
+  --color-accent-contrast: #ffffff;
+  --color-danger: #e24b4a;
   --tag-work-bg: #e6f1fb;
   --tag-work-text: #0c447c;
   --tag-relationship-bg: #eeedfe;
@@ -108,20 +117,23 @@ button:hover {
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --color-page-background: #101412;
-  --color-background-primary: #171d1a;
-  --color-background-secondary: #202823;
-  --color-text-primary: #edf4f0;
-  --color-text-secondary: #aab8b1;
-  --color-text-tertiary: #7f8d86;
-  --color-border-secondary: #3c4942;
-  --color-border-tertiary: #2a332f;
-  --tag-work-bg: #18314a;
-  --tag-work-text: #9fd0ff;
-  --tag-relationship-bg: #29284f;
-  --tag-relationship-text: #c9c5ff;
-  --tag-growth-bg: #263a1e;
-  --tag-growth-text: #b9e98f;
-  --tag-danger-bg: #462322;
-  --tag-danger-text: #ffb5b2;
+  --color-page-background: #070d18;
+  --color-background-primary: #0f1726;
+  --color-background-secondary: #111d30;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #9fb2ce;
+  --color-text-tertiary: #6f85a3;
+  --color-border-secondary: #243a59;
+  --color-border-tertiary: #1f3350;
+  --color-accent: #00d8c9;
+  --color-accent-contrast: #05201f;
+  --color-danger: #ff6b7a;
+  --tag-work-bg: #123554;
+  --tag-work-text: #55d9ff;
+  --tag-relationship-bg: #402654;
+  --tag-relationship-text: #f472d0;
+  --tag-growth-bg: #063f37;
+  --tag-growth-text: #00d8c9;
+  --tag-danger-bg: #4a1f2a;
+  --tag-danger-text: #ff9aaa;
 }

@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
 
+const CHECK_STEPS = ["1", "2", "3"];
+
+const normalizeWeekChecks = (value) => {
+  if (Array.isArray(value)) return CHECK_STEPS.map((_, i) => !!value[i]);
+  if (value === true) return CHECK_STEPS.map(() => true);
+  return CHECK_STEPS.map(() => false);
+};
+
 const PLANS = [
   { phase: "Phase 1 — 권력의 기초", sub: "Week 1–8 · 즉각적 임팩트", weeks: [
     [
@@ -506,17 +514,29 @@ function DetailPanel({ law, onClose }) {
 }
 
 export default function App() {
-  const [done, setDone] = useState(() => { try { return JSON.parse(localStorage.getItem("l48v2")||"{}"); } catch { return {}; } });
+  const [checks, setChecks] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("l48v3") || "null");
+      const legacyDone = saved || JSON.parse(localStorage.getItem("l48v2") || "{}");
+      return Object.fromEntries(Object.entries(legacyDone).map(([idx, value]) => [idx, normalizeWeekChecks(value)]));
+    } catch {
+      return {};
+    }
+  });
   const [filter, setFilter] = useState("all");
   const [selected, setSelected] = useState(null);
 
-  useEffect(() => { try { localStorage.setItem("l48v2", JSON.stringify(done)); } catch {} }, [done]);
+  useEffect(() => { try { localStorage.setItem("l48v3", JSON.stringify(checks)); } catch {} }, [checks]);
 
-  const toggleDone = (idx) => setDone(d => ({ ...d, [idx]: !d[idx] }));
+  const toggleCheck = (idx, step) => setChecks((current) => {
+    const weekChecks = normalizeWeekChecks(current[idx]);
+    weekChecks[step] = !weekChecks[step];
+    return { ...current, [idx]: weekChecks };
+  });
   const selectLaw = (law) => setSelected(s => (s && s.n === law.n ? null : law));
 
   const total = 24;
-  const doneCount = Object.values(done).filter(Boolean).length;
+  const doneCount = Array.from({ length: total }, (_, idx) => normalizeWeekChecks(checks[idx]).every(Boolean)).filter(Boolean).length;
 
   const fb = (on) => ({ fontSize: 12, padding: "4px 12px", borderRadius: 20, border: "0.5px solid var(--color-border-secondary)", background: on ? "var(--color-background-secondary)" : "var(--color-background-primary)", color: on ? "var(--color-text-primary)" : "var(--color-text-secondary)", fontWeight: on ? 500 : 400, cursor: "pointer" });
   const tag = (g) => ({ display: "inline-block", fontSize: 10, padding: "2px 7px", borderRadius: 10, fontWeight: 500, background: TAGS[g].bg, color: TAGS[g].c });
@@ -544,17 +564,31 @@ export default function App() {
       {PLANS.map((ph, pi) => {
         const cards = ph.weeks.map((wk) => {
           const idx = wi++;
-          const isDone = !!done[idx];
+          const weekChecks = normalizeWeekChecks(checks[idx]);
+          const isDone = weekChecks.every(Boolean);
           const show = filter==="all" || (filter==="done" && isDone) || (filter!=="done" && wk.some(l => l.g===filter));
           if (!show) return null;
           return (
             <div key={idx} style={{ background: "var(--color-background-primary)", border: "0.5px solid var(--color-border-tertiary)", borderRadius: "var(--border-radius-lg)", padding: "14px 16px", opacity: isDone ? .45 : 1 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
                 <span style={{ fontSize: 11, color: "var(--color-text-tertiary)", fontWeight: 500 }}>Week {idx+1}</span>
-                <div
-                  onClick={() => toggleDone(idx)}
-                  style={{ width: 20, height: 20, borderRadius: "50%", border: isDone ? "none" : "0.5px solid var(--color-border-secondary)", background: isDone ? "#1D9E75" : "var(--color-background-secondary)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: 11, color: isDone ? "#fff" : "var(--color-text-tertiary)", flexShrink: 0 }}
-                >{isDone ? "✓" : ""}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                  {CHECK_STEPS.map((label, step) => {
+                    const isChecked = weekChecks[step];
+                    return (
+                      <button
+                        key={label}
+                        type="button"
+                        aria-label={`Week ${idx + 1} check ${label}`}
+                        aria-pressed={isChecked}
+                        onClick={() => toggleCheck(idx, step)}
+                        style={{ width: 22, height: 22, borderRadius: "50%", border: isChecked ? "none" : "0.5px solid var(--color-border-secondary)", background: isChecked ? "#1D9E75" : "var(--color-background-secondary)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: 10, color: isChecked ? "#fff" : "var(--color-text-tertiary)", flexShrink: 0, padding: 0 }}
+                      >
+                        {isChecked ? "✓" : label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
               {wk.map((law, li) => {
                 const isActive = selected && selected.n === law.n;
@@ -562,7 +596,7 @@ export default function App() {
                   <div
                     key={li}
                     onClick={() => selectLaw(law)}
-                    style={{ display: "flex", alignItems: "flex-start", gap: 8, padding: "8px 0", borderTop: "0.5px solid var(--color-border-tertiary)", cursor: "pointer", background: isActive ? "var(--color-background-secondary)" : "transparent", margin: isActive ? "0 -4px", padding: isActive ? "8px 4px" : "8px 0", borderRadius: isActive ? 6 : 0 }}
+                    style={{ display: "flex", alignItems: "flex-start", gap: 8, borderTop: "0.5px solid var(--color-border-tertiary)", cursor: "pointer", background: isActive ? "var(--color-background-secondary)" : "transparent", margin: isActive ? "0 -4px" : 0, padding: isActive ? "8px 4px" : "8px 0", borderRadius: isActive ? 6 : 0 }}
                   >
                     <span style={{ fontSize: 11, fontWeight: 500, minWidth: 22, color: "var(--color-text-tertiary)", paddingTop: 2 }}>#{law.n}</span>
                     <div style={{ flex: 1 }}>

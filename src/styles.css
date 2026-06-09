@@ -1,5 +1,7 @@
 :root {
+  color-scheme: light dark;
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --color-page-background: #eef2ef;
   --color-background-primary: #ffffff;
   --color-background-secondary: #f5f7f6;
   --color-text-primary: #17201c;
@@ -7,10 +9,18 @@
   --color-text-tertiary: #8a9691;
   --color-border-secondary: #cad4cf;
   --color-border-tertiary: #e1e7e4;
+  --tag-work-bg: #e6f1fb;
+  --tag-work-text: #0c447c;
+  --tag-relationship-bg: #eeedfe;
+  --tag-relationship-text: #3c3489;
+  --tag-growth-bg: #eaf3de;
+  --tag-growth-text: #27500a;
+  --tag-danger-bg: #fcebeb;
+  --tag-danger-text: #791f1f;
   --border-radius-lg: 8px;
 
   color: var(--color-text-primary);
-  background: #eef2ef;
+  background: var(--color-page-background);
   font-family: var(--font-sans);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -26,7 +36,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background: #eef2ef;
+  background: var(--color-page-background);
 }
 
 button,
@@ -52,5 +62,26 @@ button:hover {
 @media (max-width: 760px) {
   #root {
     width: min(100% - 20px, 560px);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-page-background: #101412;
+    --color-background-primary: #171d1a;
+    --color-background-secondary: #202823;
+    --color-text-primary: #edf4f0;
+    --color-text-secondary: #aab8b1;
+    --color-text-tertiary: #7f8d86;
+    --color-border-secondary: #3c4942;
+    --color-border-tertiary: #2a332f;
+    --tag-work-bg: #18314a;
+    --tag-work-text: #9fd0ff;
+    --tag-relationship-bg: #29284f;
+    --tag-relationship-text: #c9c5ff;
+    --tag-growth-bg: #263a1e;
+    --tag-growth-text: #b9e98f;
+    --tag-danger-bg: #462322;
+    --tag-danger-text: #ffb5b2;
   }
 }

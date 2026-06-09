@@ -449,7 +449,11 @@ const PLANS = [
   ]}
 ];
 
-const TAGS = { w:{l:"직장/비즈니스",bg:"#E6F1FB",c:"#0C447C"}, r:{l:"인간관계",bg:"#EEEDFE",c:"#3C3489"}, m:{l:"자기계발",bg:"#EAF3DE",c:"#27500A"} };
+const TAGS = {
+  w: { l: "직장/비즈니스", bg: "var(--tag-work-bg)", c: "var(--tag-work-text)" },
+  r: { l: "인간관계", bg: "var(--tag-relationship-bg)", c: "var(--tag-relationship-text)" },
+  m: { l: "자기계발", bg: "var(--tag-growth-bg)", c: "var(--tag-growth-text)" }
+};
 
 function DetailPanel({ law, onClose }) {
   if (!law) return null;
@@ -488,7 +492,7 @@ function DetailPanel({ law, onClose }) {
         {/* do / dont */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           <div>
-            <div style={{ fontSize: 11, fontWeight: 500, color: "#27500A", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 8, background: "#EAF3DE", padding: "4px 8px", borderRadius: 6, display: "inline-block" }}>이렇게 하라</div>
+            <div style={{ fontSize: 11, fontWeight: 500, color: "var(--tag-growth-text)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 8, background: "var(--tag-growth-bg)", padding: "4px 8px", borderRadius: 6, display: "inline-block" }}>이렇게 하라</div>
             <ul style={{ paddingLeft: 0, listStyle: "none", margin: 0 }}>
               {law.do.map((d,i) => (
                 <li key={i} style={{ fontSize: 13, lineHeight: 1.65, color: "var(--color-text-primary)", paddingLeft: 20, position: "relative", marginBottom: 6 }}>
@@ -498,7 +502,7 @@ function DetailPanel({ law, onClose }) {
             </ul>
           </div>
           <div>
-            <div style={{ fontSize: 11, fontWeight: 500, color: "#791F1F", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 8, background: "#FCEBEB", padding: "4px 8px", borderRadius: 6, display: "inline-block" }}>이러지 마라</div>
+            <div style={{ fontSize: 11, fontWeight: 500, color: "var(--tag-danger-text)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 8, background: "var(--tag-danger-bg)", padding: "4px 8px", borderRadius: 6, display: "inline-block" }}>이러지 마라</div>
             <ul style={{ paddingLeft: 0, listStyle: "none", margin: 0 }}>
               {law.dont.map((d,i) => (
                 <li key={i} style={{ fontSize: 13, lineHeight: 1.65, color: "var(--color-text-primary)", paddingLeft: 20, position: "relative", marginBottom: 6 }}>

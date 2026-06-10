@@ -745,17 +745,6 @@ export default function App() {
         <div style={{ height: 4, borderRadius: 4, background: "var(--color-accent)", width: `${(doneCount/total*100).toFixed(0)}%`, transition: "width .3s" }} />
       </div>
 
-      {/* detail panel — inline, above grid */}
-      {selected && (
-        <DetailPanel
-          law={selected.law}
-          mode={selected.mode}
-          modernLaw={MODERN_LAWS[selected.law.n]}
-          onModeChange={setSelectedMode}
-          onClose={() => setSelected(null)}
-        />
-      )}
-
       {/* plan grid */}
       {PLANS.map((ph, pi) => {
         const cards = ph.weeks.map((wk) => {
@@ -786,6 +775,17 @@ export default function App() {
                   })}
                 </div>
               </div>
+              {selected && wk.some((law) => law.n === selected.law.n) && (
+                <div style={{ borderTop: "0.5px solid var(--color-border-tertiary)", paddingTop: 14, marginBottom: 10 }}>
+                  <DetailPanel
+                    law={selected.law}
+                    mode={selected.mode}
+                    modernLaw={MODERN_LAWS[selected.law.n]}
+                    onModeChange={setSelectedMode}
+                    onClose={() => setSelected(null)}
+                  />
+                </div>
+              )}
               {wk.map((law, li) => {
                 const modernLaw = MODERN_LAWS[law.n];
                 const isActive = selected && selected.law.n === law.n;

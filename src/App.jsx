@@ -8,8 +8,6 @@ const normalizeWeekChecks = (value) => {
   return CHECK_STEPS.map(() => false);
 };
 
-const getPlanTotal = (plans) => plans.reduce((sum, phase) => sum + phase.weeks.length, 0);
-
 const PLANS = [
   { phase: "Phase 1 — 권력의 기초", sub: "Week 1–8 · 즉각적 임팩트", weeks: [
     [
@@ -586,10 +584,9 @@ const MODERN_PLANS = [
   ]}
 ];
 
-const PLAN_SETS = {
-  original: { label: "Original", plans: PLANS },
-  modern: { label: "Modern", plans: MODERN_PLANS }
-};
+const MODERN_LAWS = Object.fromEntries(
+  MODERN_PLANS.flatMap((phase) => phase.weeks.flat()).map((law) => [law.n, law])
+);
 
 const TAGS = {
   w: { l: "직장/비즈니스", bg: "var(--tag-work-bg)", c: "var(--tag-work-text)" },
@@ -597,17 +594,29 @@ const TAGS = {
   m: { l: "자기계발", bg: "var(--tag-growth-bg)", c: "var(--tag-growth-text)" }
 };
 
-function DetailPanel({ law, onClose }) {
+function DetailPanel({ law, mode, modernLaw, onModeChange, onClose }) {
   if (!law) return null;
-  const tag = TAGS[law.g];
+  const visibleLaw = mode === "modern" && modernLaw ? modernLaw : law;
+  const tag = TAGS[visibleLaw.g];
   return (
     <div style={{ marginBottom: 24, border: "0.5px solid var(--color-border-secondary)", borderRadius: "var(--border-radius-lg)", overflow: "hidden" }}>
       {/* header */}
       <div style={{ background: "var(--color-background-secondary)", padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
-          <div style={{ fontSize: 11, color: "var(--color-text-tertiary)", fontWeight: 500, marginBottom: 4 }}>Law #{law.n}</div>
-          <div style={{ fontSize: 17, fontWeight: 500, color: "var(--color-text-primary)", lineHeight: 1.4, marginBottom: 8 }}>{law.t}</div>
-          <span style={{ display: "inline-block", fontSize: 11, padding: "3px 9px", borderRadius: 10, fontWeight: 500, background: tag.bg, color: tag.c }}>{tag.l}</span>
+          <div style={{ fontSize: 11, color: "var(--color-text-tertiary)", fontWeight: 500, marginBottom: 4 }}>Law #{visibleLaw.n}{mode === "modern" ? " · Modern" : ""}</div>
+          <div style={{ fontSize: 17, fontWeight: 500, color: "var(--color-text-primary)", lineHeight: 1.4, marginBottom: 8 }}>{visibleLaw.t}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            <span style={{ display: "inline-block", fontSize: 11, padding: "3px 9px", borderRadius: 10, fontWeight: 500, background: tag.bg, color: tag.c }}>{tag.l}</span>
+            {modernLaw && (
+              <button
+                type="button"
+                onClick={() => onModeChange(mode === "modern" ? "original" : "modern")}
+                style={{ fontSize: 11, padding: "3px 9px", borderRadius: 10, border: "0.5px solid var(--color-border-secondary)", background: mode === "modern" ? "var(--color-accent)" : "var(--color-background-primary)", color: mode === "modern" ? "var(--color-accent-contrast)" : "var(--color-text-secondary)", fontWeight: 600, cursor: "pointer" }}
+              >
+                {mode === "modern" ? "Original" : "Modern"}
+              </button>
+            )}
+          </div>
         </div>
         <button onClick={onClose} style={{ background: "none", border: "0.5px solid var(--color-border-secondary)", borderRadius: 6, cursor: "pointer", fontSize: 13, color: "var(--color-text-secondary)", padding: "4px 10px", flexShrink: 0, marginLeft: 12 }}>닫기</button>
       </div>
@@ -616,19 +625,19 @@ function DetailPanel({ law, onClose }) {
         {/* why */}
         <div style={{ marginBottom: 18 }}>
           <div style={{ fontSize: 11, fontWeight: 500, color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 6 }}>왜 중요한가</div>
-          <p style={{ fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.75, margin: 0 }}>{law.why}</p>
+          <p style={{ fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.75, margin: 0 }}>{visibleLaw.why}</p>
         </div>
 
         {/* practice */}
         <div style={{ marginBottom: 18 }}>
           <div style={{ fontSize: 11, fontWeight: 500, color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 6 }}>이번 주 실천</div>
-          <p style={{ fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.75, margin: 0 }}>{law.a}</p>
+          <p style={{ fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.75, margin: 0 }}>{visibleLaw.a}</p>
         </div>
 
         {/* example */}
         <div style={{ marginBottom: 18 }}>
           <div style={{ fontSize: 11, fontWeight: 500, color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 8 }}>실제 예시</div>
-          <div style={{ fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.75, borderLeft: "3px solid var(--color-accent)", paddingLeft: 14, borderRadius: 0 }}>{law.example}</div>
+          <div style={{ fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.75, borderLeft: "3px solid var(--color-accent)", paddingLeft: 14, borderRadius: 0 }}>{visibleLaw.example}</div>
         </div>
 
         {/* do / dont */}
@@ -636,7 +645,7 @@ function DetailPanel({ law, onClose }) {
           <div>
             <div style={{ fontSize: 11, fontWeight: 500, color: "var(--tag-growth-text)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 8, background: "var(--tag-growth-bg)", padding: "4px 8px", borderRadius: 6, display: "inline-block" }}>이렇게 하라</div>
             <ul style={{ paddingLeft: 0, listStyle: "none", margin: 0 }}>
-              {law.do.map((d,i) => (
+              {visibleLaw.do.map((d,i) => (
                 <li key={i} style={{ fontSize: 13, lineHeight: 1.65, color: "var(--color-text-primary)", paddingLeft: 20, position: "relative", marginBottom: 6 }}>
                   <span style={{ position: "absolute", left: 0, color: "var(--color-accent)", fontWeight: 700 }}>✓</span>{d}
                 </li>
@@ -646,7 +655,7 @@ function DetailPanel({ law, onClose }) {
           <div>
             <div style={{ fontSize: 11, fontWeight: 500, color: "var(--tag-danger-text)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 8, background: "var(--tag-danger-bg)", padding: "4px 8px", borderRadius: 6, display: "inline-block" }}>이러지 마라</div>
             <ul style={{ paddingLeft: 0, listStyle: "none", margin: 0 }}>
-              {law.dont.map((d,i) => (
+              {visibleLaw.dont.map((d,i) => (
                 <li key={i} style={{ fontSize: 13, lineHeight: 1.65, color: "var(--color-text-primary)", paddingLeft: 20, position: "relative", marginBottom: 6 }}>
                   <span style={{ position: "absolute", left: 0, color: "var(--color-danger)", fontWeight: 700 }}>✕</span>{d}
                 </li>
@@ -670,21 +679,12 @@ export default function App() {
   const [checks, setChecks] = useState(() => {
     try {
       const savedPlans = JSON.parse(localStorage.getItem("l48v4") || "null");
-      if (savedPlans && savedPlans.original && savedPlans.modern) return savedPlans;
+      if (savedPlans && savedPlans.original) return savedPlans.original;
       const saved = JSON.parse(localStorage.getItem("l48v3") || "null");
       const legacyDone = saved || JSON.parse(localStorage.getItem("l48v2") || "{}");
-      const original = Object.fromEntries(Object.entries(legacyDone).map(([idx, value]) => [idx, normalizeWeekChecks(value)]));
-      return { original, modern: {} };
+      return Object.fromEntries(Object.entries(legacyDone).map(([idx, value]) => [idx, normalizeWeekChecks(value)]));
     } catch {
-      return { original: {}, modern: {} };
-    }
-  });
-  const [planKey, setPlanKey] = useState(() => {
-    try {
-      const savedPlan = localStorage.getItem("l48plan");
-      return savedPlan && PLAN_SETS[savedPlan] ? savedPlan : "original";
-    } catch {
-      return "original";
+      return {};
     }
   });
   const [filter, setFilter] = useState("all");
@@ -697,25 +697,22 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem("l48v4", JSON.stringify(checks));
-      localStorage.setItem("l48v3", JSON.stringify(checks.original || {}));
+      localStorage.setItem("l48v3", JSON.stringify(checks));
     } catch {}
   }, [checks]);
 
-  useEffect(() => { try { localStorage.setItem("l48plan", planKey); } catch {} }, [planKey]);
-
   const toggleCheck = (idx, step) => setChecks((current) => {
-    const planChecks = current[planKey] || {};
-    const weekChecks = normalizeWeekChecks(planChecks[idx]);
+    const weekChecks = normalizeWeekChecks(current[idx]);
     weekChecks[step] = !weekChecks[step];
-    return { ...current, [planKey]: { ...planChecks, [idx]: weekChecks } };
+    return { ...current, [idx]: weekChecks };
   });
-  const selectLaw = (law) => setSelected(s => (s && s.n === law.n ? null : law));
+  const selectLaw = (law, mode = "original") => setSelected((current) => (
+    current && current.law.n === law.n && current.mode === mode ? null : { law, mode }
+  ));
+  const setSelectedMode = (mode) => setSelected((current) => current ? { ...current, mode } : current);
 
-  const activePlan = PLAN_SETS[planKey];
-  const activeChecks = checks[planKey] || {};
-  const total = getPlanTotal(activePlan.plans);
-  const doneCount = Array.from({ length: total }, (_, idx) => normalizeWeekChecks(activeChecks[idx]).every(Boolean)).filter(Boolean).length;
+  const total = 24;
+  const doneCount = Array.from({ length: total }, (_, idx) => normalizeWeekChecks(checks[idx]).every(Boolean)).filter(Boolean).length;
 
   const fb = (on) => ({ fontSize: 12, padding: "4px 12px", borderRadius: 20, border: "0.5px solid var(--color-border-secondary)", background: on ? "var(--color-background-secondary)" : "var(--color-background-primary)", color: on ? "var(--color-text-primary)" : "var(--color-text-secondary)", fontWeight: on ? 500 : 400, cursor: "pointer" });
   const tag = (g) => ({ display: "inline-block", fontSize: 10, padding: "2px 7px", borderRadius: 10, fontWeight: 500, background: TAGS[g].bg, color: TAGS[g].c });
@@ -725,24 +722,6 @@ export default function App() {
   let wi = 0;
   return (
     <div style={{ padding: "1rem 0", fontFamily: "var(--font-sans)" }}>
-      {/* plan tabs */}
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: "1rem" }}>
-        {Object.entries(PLAN_SETS).map(([key, plan]) => (
-          <button
-            key={key}
-            type="button"
-            style={{ fontSize: 13, padding: "6px 14px", borderRadius: 20, border: "0.5px solid var(--color-border-secondary)", background: planKey === key ? "var(--color-accent)" : "var(--color-background-primary)", color: planKey === key ? "var(--color-accent-contrast)" : "var(--color-text-primary)", fontWeight: 600, cursor: "pointer" }}
-            onClick={() => {
-              setPlanKey(key);
-              setSelected(null);
-              setFilter("all");
-            }}
-          >
-            {plan.label}
-          </button>
-        ))}
-      </div>
-
       {/* filters */}
       <div style={{ display: "flex", gap: 10, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", marginBottom: "1rem" }}>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -767,13 +746,21 @@ export default function App() {
       </div>
 
       {/* detail panel — inline, above grid */}
-      {selected && <DetailPanel law={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <DetailPanel
+          law={selected.law}
+          mode={selected.mode}
+          modernLaw={MODERN_LAWS[selected.law.n]}
+          onModeChange={setSelectedMode}
+          onClose={() => setSelected(null)}
+        />
+      )}
 
       {/* plan grid */}
-      {activePlan.plans.map((ph, pi) => {
+      {PLANS.map((ph, pi) => {
         const cards = ph.weeks.map((wk) => {
           const idx = wi++;
-          const weekChecks = normalizeWeekChecks(activeChecks[idx]);
+          const weekChecks = normalizeWeekChecks(checks[idx]);
           const isDone = weekChecks.every(Boolean);
           const show = filter==="all" || (filter==="done" && isDone) || (filter!=="done" && wk.some(l => l.g===filter));
           if (!show) return null;
@@ -800,7 +787,8 @@ export default function App() {
                 </div>
               </div>
               {wk.map((law, li) => {
-                const isActive = selected && selected.n === law.n;
+                const modernLaw = MODERN_LAWS[law.n];
+                const isActive = selected && selected.law.n === law.n;
                 return (
                   <div
                     key={li}
@@ -813,6 +801,18 @@ export default function App() {
                       <div style={{ fontSize: 12, color: "var(--color-text-secondary)", lineHeight: 1.5, marginTop: 2 }}>{law.a}</div>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
                         <span style={tag(law.g)}>{TAGS[law.g].l}</span>
+                        {modernLaw && (
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              selectLaw(law, "modern");
+                            }}
+                            style={{ fontSize: 10, padding: "2px 7px", borderRadius: 10, border: "0.5px solid var(--color-border-secondary)", background: selected && selected.law.n === law.n && selected.mode === "modern" ? "var(--color-accent)" : "var(--color-background-primary)", color: selected && selected.law.n === law.n && selected.mode === "modern" ? "var(--color-accent-contrast)" : "var(--color-text-secondary)", fontWeight: 600, cursor: "pointer" }}
+                          >
+                            Modern
+                          </button>
+                        )}
                         <span style={{ fontSize: 11, color: "var(--color-text-tertiary)" }}>{isActive ? "▲ 접기" : "▼ 상세 보기"}</span>
                       </div>
                     </div>

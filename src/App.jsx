@@ -8,6 +8,8 @@ const normalizeWeekChecks = (value) => {
   return CHECK_STEPS.map(() => false);
 };
 
+const getPlanTotal = (plans) => plans.reduce((sum, phase) => sum + phase.weeks.length, 0);
+
 const PLANS = [
   { phase: "Phase 1 — 권력의 기초", sub: "Week 1–8 · 즉각적 임팩트", weeks: [
     [
@@ -449,6 +451,146 @@ const PLANS = [
   ]}
 ];
 
+const MODERN_PLANS = [
+  { phase: "Modern Phase 1 — 가시성과 선택지", sub: "Week 1-2 · 현대 권력의 기초", weeks: [
+    [
+      {
+        n:1, t:"상사를 배움의 발판으로 삼고 넘어가라", g:"w",
+        a:"현재 상사나 조직에서 배울 수 있는 것 3개와, 그다음 이동/도약 선택지 2개를 적는다.",
+        why:"현대 커리어에서는 한 조직 안에서 조용히 안전하게 머무르는 것보다 네트워크, 이직, 고가시성 프로젝트가 더 큰 선택지를 만든다.",
+        example:"상사의 승인을 기다리는 대신, 팀 성과에 직접 연결되는 작은 파일럿을 제안하고 결과를 포트폴리오·링크드인·업계 네트워크에 기록한다.",
+        do:["상사에게 배울 역량과 넘어서야 할 한계를 구분하기", "성과가 외부에서도 설명되도록 기록하기", "분기마다 더 큰 무대나 역할을 탐색하기"],
+        dont:["충성심을 이유로 성장 기회를 계속 미루기", "상사를 이기는 게임에만 집착하기", "현재 조직 밖 선택지를 전혀 만들지 않기"]
+      },
+      {
+        n:4, t:"말하고 보여져라", g:"w",
+        a:"이번 주 회의, 글, 메시지 중 하나에서 내 관점을 명확하게 공개한다.",
+        why:"침묵은 실수를 줄이지만 존재감도 줄인다. 현대 권력은 보이는 전문성, 프레임 설정, 반복 노출에서 생긴다.",
+        example:"회의에서 '좋습니다'만 말하는 대신, '제가 보는 핵심 리스크는 A이고, 그래서 B 순서로 가야 합니다'처럼 판단을 드러낸다.",
+        do:["회의마다 최소 1번 관점 있는 발언하기", "내 전문 분야 글이나 메모를 공개하기", "반응보다 일관된 노출 리듬을 우선하기"],
+        dont:["완벽한 의견이 아니면 침묵하기", "시끄럽기만 하고 판단은 없는 발언하기", "내 이름과 전문성이 연결되지 않게 방치하기"]
+      }
+    ],
+    [
+      {
+        n:5, t:"온라인 평판을 설계하고 현실에서는 자유롭게 살아라", g:"w",
+        a:"내 이름/브랜드를 검색하고, 첫 화면에 보였으면 하는 신뢰 신호 1개를 보강한다.",
+        why:"현대 평판은 주변 소문보다 검색, 프로필, 공개 기록에 오래 남는다. 이동성이 큰 시대에는 디지털 신뢰가 더 넓게 작동한다.",
+        example:"링크드인 소개를 '직무명'이 아니라 '어떤 문제를 해결하는 사람인지'로 바꾸고, 대표 성과 2개를 숫자로 정리한다.",
+        do:["검색 결과와 프로필을 주기적으로 점검하기", "좋은 기록이 남는 공개 채널 만들기", "현실 인간관계는 핵심 인물 중심으로 관리하기"],
+        dont:["온라인 흔적을 방치하기", "모든 사람에게 좋은 사람으로 보이려 에너지 낭비하기", "감정적인 댓글이나 글로 신뢰를 깎기"]
+      },
+      {
+        n:7, t:"공을 나누고 더 큰 파이를 만들어라", g:"w",
+        a:"이번 주 누군가의 기여를 공개적으로 인정하고, 내가 얻는 장기 이익을 관찰한다.",
+        why:"현대 팀에서는 재능 있는 사람이 떠날 수 있다. 공정함과 인정은 생산성을 키우고, 리더는 커진 결과에서 더 큰 몫을 얻는다.",
+        example:"보고서에서 '제가 했습니다'보다 'A가 데이터 구조를 잡아줘서 속도가 났고, 저는 의사결정 흐름을 정리했습니다'라고 말한다.",
+        do:["성과 발표 때 기여자를 이름으로 인정하기", "공을 나눠도 내 리더십이 보이게 구조화하기", "팀원이 다시 일하고 싶어 하는 환경 만들기"],
+        dont:["남의 아이디어를 내 것처럼 가져오기", "인정하면 내 몫이 줄어든다고 생각하기", "단기 정치로 장기 생산성을 태우기"]
+      }
+    ]
+  ]},
+  { phase: "Modern Phase 2 — 관계와 영향력", sub: "Week 3-4 · 끌어당기는 힘", weeks: [
+    [
+      {
+        n:11, t:"사람들이 의존하고 싶게 만들어라", g:"r",
+        a:"내가 제공하는 고유 가치 1개를 정하고, 사람들이 자발적으로 다시 찾게 만드는 접점을 만든다.",
+        why:"강제로 의존시키는 관계는 비용이 크다. 현대 영향력은 실력, 매력, 신뢰로 상대가 스스로 가까이 오게 만들 때 강해진다.",
+        example:"자료를 독점하지 않고 핵심 프레임워크를 공유하되, 적용과 판단은 내가 가장 잘하는 영역으로 남긴다.",
+        do:["도움받으면 결과가 좋아지는 사람으로 포지셔닝하기", "희소한 판단력이나 네트워크를 키우기", "상대가 자발적으로 다시 찾을 이유 만들기"],
+        dont:["정보를 숨겨 억지 의존 만들기", "없으면 안 된다고 협박하듯 행동하기", "가치 없이 친밀감만 요구하기"]
+      },
+      {
+        n:13, t:"이익 위에 이상을 얹어라", g:"w",
+        a:"내 제안 하나를 상대의 실익과 더 큰 의미가 동시에 보이도록 다시 작성한다.",
+        why:"물질적 이익은 기본이다. 하지만 충분히 가진 사람일수록 명분, 정체성, 선한 이미지에도 움직인다.",
+        example:"가격 절감 제안에 '비용 12% 절감'만 쓰지 않고, '낭비를 줄여 팀이 더 중요한 일에 집중하게 한다'는 의미를 붙인다.",
+        do:["상대가 얻는 실익을 먼저 명확히 하기", "그 실익이 어떤 가치와 연결되는지 설명하기", "좋은 일을 하면서 이익도 얻는 구조 만들기"],
+        dont:["명분만 있고 숫자가 없는 제안하기", "상대의 선함을 이용하는 말투 쓰기", "내 이익을 완전히 숨겨 불신 만들기"]
+      }
+    ],
+    [
+      {
+        n:17, t:"따뜻하게 이끌되 레버리지는 손에 쥐어라", g:"w",
+        a:"내가 리드하는 관계에서 친절함과 기준을 동시에 보여주는 문장 1개를 사용한다.",
+        why:"공포와 예측 불가능성은 현대 조직에서 좋은 사람을 떠나게 한다. 따뜻함은 끌어당기고, 기준과 권한은 존중을 유지한다.",
+        example:"무리한 요청에 '이해합니다. 다만 이 기준은 지켜야 합니다. 대신 가능한 대안은 두 가지입니다'라고 말한다.",
+        do:["먼저 존중과 안정감을 주기", "기준과 결과 책임은 분명히 하기", "보상과 제재 수단을 조용히 유지하기"],
+        dont:["기분에 따라 반응을 바꾸기", "친절함을 무기력함으로 만들기", "권한이 없는데 센 척만 하기"]
+      },
+      {
+        n:18, t:"요새를 만들고 없는 것처럼 움직여라", g:"m",
+        a:"돈, 법, 건강, 관계 중 하나에서 나를 무너뜨릴 수 있는 리스크를 줄이는 장치를 만든다.",
+        why:"현대의 요새는 고립이 아니라 안전망이다. 다운사이드를 막아두면 더 자유롭고 대담하게 협력할 수 있다.",
+        example:"비상금, 계약서, 백업 계정, 독립 수입원처럼 배신이나 실패가 와도 바로 무너지지 않는 장치를 마련한다.",
+        do:["최악의 경우를 버틸 안전장치 만들기", "의존도를 낮춰 협상력 확보하기", "겉으로는 여유 있고 개방적으로 행동하기"],
+        dont:["안전망 없이 사람만 믿기", "방어적 태도를 과시해 관계를 얼어붙게 하기", "요새를 고립과 혼동하기"]
+      }
+    ]
+  ]},
+  { phase: "Modern Phase 3 — 지위와 자기 설계", sub: "Week 5-7 · 현대적 우위", weeks: [
+    [
+      {
+        n:24, t:"정치는 배우되 실력과 결과를 희생하지 마라", g:"w",
+        a:"내 조직의 의사결정자, 비공식 영향력자, 실제 성과 지표를 각각 적는다.",
+        why:"현대 권력은 정치만으로 오래가지 않는다. 관계를 읽되, 결국 대체 불가능한 결과와 기술이 기반이 되어야 한다.",
+        example:"상사의 취향을 맞추는 데만 시간을 쓰지 않고, 핵심 KPI를 개선하는 프로젝트를 잡아 정치와 실적을 동시에 만든다.",
+        do:["조직의 권력 지도를 읽기", "정치적 언어와 타이밍을 배우기", "스킬과 결과를 매주 누적하기"],
+        dont:["아첨을 실력보다 앞세우기", "정치를 더럽다고 외면하기", "성과 없이 관계만 관리하기"]
+      },
+      {
+        n:27, t:"쉬운 해결책의 시장을 이해하라", g:"w",
+        a:"내 분야에서 사람들이 간절히 원하는 '빠른 개선' 주제 1개를 찾아 설명해본다.",
+        why:"현대 사람들은 복잡한 문제에도 쉬운 프레임과 빠른 성과를 원한다. 영향력은 희망을 팔되 실제 가치로 뒷받침할 때 지속된다.",
+        example:"생산성 컨설팅을 '완벽한 시스템'이 아니라 '이번 주 바로 줄일 수 있는 낭비 3가지'로 제안한다.",
+        do:["복잡한 지식을 쉬운 첫 단계로 번역하기", "작은 성공 경험을 빠르게 제공하기", "희망과 현실성을 함께 유지하기"],
+        dont:["근거 없는 만능 해결책 팔기", "사람들의 절박함을 착취하기", "어려운 실행을 완전히 숨기기"]
+      }
+    ],
+    [
+      {
+        n:30, t:"성과를 영감으로 만들어라", g:"m",
+        a:"내 성과 하나를 재능, 노력, 배운 점이 함께 보이도록 한 문단으로 정리한다.",
+        why:"오늘날 사람들은 effortless보다 hard-earned 스토리에 더 쉽게 존중을 보낸다. 성과 뒤의 노력은 지위를 낮추지 않고 신뢰를 만든다.",
+        example:"'운 좋게 잘 됐어요' 대신 '처음엔 막혔지만 매주 지표를 고쳐서 여기까지 왔습니다'라고 말한다.",
+        do:["성과 뒤의 훈련과 판단을 함께 보여주기", "타인도 배울 수 있는 교훈으로 포장하기", "재능과 노력의 균형 잡기"],
+        dont:["모든 것을 쉽게 해낸 척하기", "고생담만 늘어놓고 성과를 흐리기", "겸손을 핑계로 임팩트를 축소하기"]
+      },
+      {
+        n:34, t:"차려입기보다 여유를 입어라", g:"m",
+        a:"중요한 자리에서 과시가 아닌 자신감과 맥락 적합성을 기준으로 스타일을 선택한다.",
+        why:"브랜드와 격식은 누구나 흉내 낼 수 있다. 현대의 힘은 규칙을 이해하면서도 거기에 완전히 매이지 않는 여유에서 드러난다.",
+        example:"모두가 과하게 격식을 차리는 자리에서 깔끔하지만 편안한 스타일로, 말과 결과가 더 돋보이게 만든다.",
+        do:["상황의 드레스 코드를 먼저 읽기", "과시보다 자연스러운 품질감 선택하기", "외형보다 태도와 결과가 중심이 되게 하기"],
+        dont:["비싼 로고로 권위를 빌리기", "맥락을 무시한 무성의함을 자유로 착각하기", "옷으로만 지위를 만들려 하기"]
+      }
+    ],
+    [
+      {
+        n:38, t:"처음엔 맞추고, 곧 기준을 바꿔라", g:"r",
+        a:"내가 속한 그룹에서 처음 맞춰야 할 규칙과 나중에 바꾸고 싶은 기준을 구분한다.",
+        why:"처음부터 튀면 진입 비용이 커진다. 하지만 계속 순응하면 리더가 될 수 없다. 현대의 자유는 적응 후 기준을 재설계할 때 생긴다.",
+        example:"새 팀에서는 보고 양식을 따르되, 신뢰를 얻은 뒤 더 빠른 의사결정 방식으로 회의 구조를 바꾼다.",
+        do:["초기에는 핵심 규칙을 빠르게 익히기", "신뢰와 성과를 얻은 뒤 방식 제안하기", "나와 맞는 사람들을 끌어모으기"],
+        dont:["초반부터 반항만 하기", "영원히 남의 기준에 맞춰 살기", "다름을 실력 없이 주장하기"]
+      },
+      {
+        n:46, t:"가능한 한 뛰어나게 보여라", g:"m",
+        a:"내 약점을 과하게 드러내기보다, 강점과 성과가 먼저 보이도록 프로필/소개를 정리한다.",
+        why:"작은 집단에서 질투를 피하려 낮춰 보이는 전략은 현대의 넓은 시장에선 손해가 될 수 있다. 평균의 눈치를 보기보다 좋은 사람들과 연결되어야 한다.",
+        example:"자기소개에서 '아직 부족하지만'으로 시작하지 않고, 내가 만든 결과와 앞으로 만들 가치를 먼저 말한다.",
+        do:["강점과 성과를 선명하게 보여주기", "질투하는 사람보다 수준 높은 사람을 찾기", "겸손은 태도로, 포지셔닝은 강하게 하기"],
+        dont:["평균적인 사람을 편하게 하려고 나를 낮추기", "약점 공개를 친밀감 전략으로 남용하기", "완벽한 척하며 피드백을 막기"]
+      }
+    ]
+  ]}
+];
+
+const PLAN_SETS = {
+  original: { label: "Original", plans: PLANS },
+  modern: { label: "Modern", plans: MODERN_PLANS }
+};
+
 const TAGS = {
   w: { l: "직장/비즈니스", bg: "var(--tag-work-bg)", c: "var(--tag-work-text)" },
   r: { l: "인간관계", bg: "var(--tag-relationship-bg)", c: "var(--tag-relationship-text)" },
@@ -527,11 +669,22 @@ export default function App() {
   });
   const [checks, setChecks] = useState(() => {
     try {
+      const savedPlans = JSON.parse(localStorage.getItem("l48v4") || "null");
+      if (savedPlans && savedPlans.original && savedPlans.modern) return savedPlans;
       const saved = JSON.parse(localStorage.getItem("l48v3") || "null");
       const legacyDone = saved || JSON.parse(localStorage.getItem("l48v2") || "{}");
-      return Object.fromEntries(Object.entries(legacyDone).map(([idx, value]) => [idx, normalizeWeekChecks(value)]));
+      const original = Object.fromEntries(Object.entries(legacyDone).map(([idx, value]) => [idx, normalizeWeekChecks(value)]));
+      return { original, modern: {} };
     } catch {
-      return {};
+      return { original: {}, modern: {} };
+    }
+  });
+  const [planKey, setPlanKey] = useState(() => {
+    try {
+      const savedPlan = localStorage.getItem("l48plan");
+      return savedPlan && PLAN_SETS[savedPlan] ? savedPlan : "original";
+    } catch {
+      return "original";
     }
   });
   const [filter, setFilter] = useState("all");
@@ -542,17 +695,27 @@ export default function App() {
     try { localStorage.setItem("l48theme", theme); } catch {}
   }, [theme]);
 
-  useEffect(() => { try { localStorage.setItem("l48v3", JSON.stringify(checks)); } catch {} }, [checks]);
+  useEffect(() => {
+    try {
+      localStorage.setItem("l48v4", JSON.stringify(checks));
+      localStorage.setItem("l48v3", JSON.stringify(checks.original || {}));
+    } catch {}
+  }, [checks]);
+
+  useEffect(() => { try { localStorage.setItem("l48plan", planKey); } catch {} }, [planKey]);
 
   const toggleCheck = (idx, step) => setChecks((current) => {
-    const weekChecks = normalizeWeekChecks(current[idx]);
+    const planChecks = current[planKey] || {};
+    const weekChecks = normalizeWeekChecks(planChecks[idx]);
     weekChecks[step] = !weekChecks[step];
-    return { ...current, [idx]: weekChecks };
+    return { ...current, [planKey]: { ...planChecks, [idx]: weekChecks } };
   });
   const selectLaw = (law) => setSelected(s => (s && s.n === law.n ? null : law));
 
-  const total = 24;
-  const doneCount = Array.from({ length: total }, (_, idx) => normalizeWeekChecks(checks[idx]).every(Boolean)).filter(Boolean).length;
+  const activePlan = PLAN_SETS[planKey];
+  const activeChecks = checks[planKey] || {};
+  const total = getPlanTotal(activePlan.plans);
+  const doneCount = Array.from({ length: total }, (_, idx) => normalizeWeekChecks(activeChecks[idx]).every(Boolean)).filter(Boolean).length;
 
   const fb = (on) => ({ fontSize: 12, padding: "4px 12px", borderRadius: 20, border: "0.5px solid var(--color-border-secondary)", background: on ? "var(--color-background-secondary)" : "var(--color-background-primary)", color: on ? "var(--color-text-primary)" : "var(--color-text-secondary)", fontWeight: on ? 500 : 400, cursor: "pointer" });
   const tag = (g) => ({ display: "inline-block", fontSize: 10, padding: "2px 7px", borderRadius: 10, fontWeight: 500, background: TAGS[g].bg, color: TAGS[g].c });
@@ -562,6 +725,24 @@ export default function App() {
   let wi = 0;
   return (
     <div style={{ padding: "1rem 0", fontFamily: "var(--font-sans)" }}>
+      {/* plan tabs */}
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: "1rem" }}>
+        {Object.entries(PLAN_SETS).map(([key, plan]) => (
+          <button
+            key={key}
+            type="button"
+            style={{ fontSize: 13, padding: "6px 14px", borderRadius: 20, border: "0.5px solid var(--color-border-secondary)", background: planKey === key ? "var(--color-accent)" : "var(--color-background-primary)", color: planKey === key ? "var(--color-accent-contrast)" : "var(--color-text-primary)", fontWeight: 600, cursor: "pointer" }}
+            onClick={() => {
+              setPlanKey(key);
+              setSelected(null);
+              setFilter("all");
+            }}
+          >
+            {plan.label}
+          </button>
+        ))}
+      </div>
+
       {/* filters */}
       <div style={{ display: "flex", gap: 10, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", marginBottom: "1rem" }}>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -589,10 +770,10 @@ export default function App() {
       {selected && <DetailPanel law={selected} onClose={() => setSelected(null)} />}
 
       {/* plan grid */}
-      {PLANS.map((ph, pi) => {
+      {activePlan.plans.map((ph, pi) => {
         const cards = ph.weeks.map((wk) => {
           const idx = wi++;
-          const weekChecks = normalizeWeekChecks(checks[idx]);
+          const weekChecks = normalizeWeekChecks(activeChecks[idx]);
           const isDone = weekChecks.every(Boolean);
           const show = filter==="all" || (filter==="done" && isDone) || (filter!=="done" && wk.some(l => l.g===filter));
           if (!show) return null;
